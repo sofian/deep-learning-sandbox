@@ -1,0 +1,48 @@
+== Basic packages ==
+
+sudo apt-get update
+sudo apt-get upgrade
+
+# From http://deeplearning.net/software/theano/install_ubuntu.html#install-ubuntu
+
+sudo apt-get install python-numpy python-scipy python-dev python3-dev python-nose python3-nose python-pip  g++ libopenblas-dev git
+
+sudo apt-get install g++-4.9
+
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10
+
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10
+
+sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30
+sudo update-alternatives --set cc /usr/bin/gcc
+
+sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30
+sudo update-alternatives --set c++ /usr/bin/g++
+
+# Work around a glibc bug
+echo -e "\n[nvcc]\nflags=-D_FORCE_INLINES\n" >> ~/.theanorc
+
+
+sudo pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git
+
+wget https://bootstrap.pypa.io/get-pip.py
+sudo python3 get-pip.py
+
+sudo pip install theano
+sudo pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git
+
+
+== Update BLAS ==
+# remove openblas if you installed it
+sudo apt-get remove libopenblas-base
+# Download the development version of OpenBLAS
+git clone git://github.com/xianyi/OpenBLAS
+cd OpenBLAS
+make FC=gfortran
+sudo make PREFIX=/usr/local/ install
+# Tell Theano to use OpenBLAS.
+# This works only for the current user.
+# Each Theano user on that computer should run that line.
+echo -e "\n[blas]\nldflags = -lopenblas\n" >> ~/.theanorc
